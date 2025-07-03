@@ -50,3 +50,16 @@ def read_item(skip:int=0,limit:int=10):
     - limit: Maximum number of items to return
     """
     return {"skip":skip,"limit":limit,"items":[f"Item {i}" for i in range(skip, skip + limit)]} 
+
+#multiple path and query parameters
+
+@app.get("/users/{user_id}/items/{item_id}")
+def read_user_ietm(user_id:int,item_id:int,q:Union[str,None]=None,short:bool=False):
+    """
+    Get specific item for a specific user
+    """
+    return {
+        "user_id": user_id, 
+        "item_id": item_id,
+        "description": f"Item {item_id} belongs to User {user_id}"
+    }
