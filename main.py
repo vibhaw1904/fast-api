@@ -2,7 +2,11 @@ from typing import Union
 from fastapi import FastAPI
 from pydantic import BaseModel
 
-app=FastAPI();
+app=FastAPI(
+     title="My First FastAPI App",
+    description="Learning FastAPI step by step",
+    version="1.0.0"
+);
 
 
 class Item(BaseModel):
@@ -34,3 +38,15 @@ def create_item(item:Item):
 @app.delete("/items/{item_id}")
 def delete_item(item_id:int):
     return {"item_id":item_id}
+
+
+#route with query parameters
+
+@app.get("/items/")
+def read_item(skip:int=0,limit:int=10):
+    """
+    Get items with pagination
+    - skip: Number of items to skip
+    - limit: Maximum number of items to return
+    """
+    return {"skip":skip,"limit":limit,"items":[f"Item {i}" for i in range(skip, skip + limit)]} 
