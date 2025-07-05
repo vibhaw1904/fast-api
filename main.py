@@ -102,5 +102,13 @@ def read_user_ietm(user_id:int,item_id:int,q:Union[str,None]=None,short:bool=Fal
     }
 
 
+
+#helper function to find task
+def find_task(task_id:int):
+    for task in tasks_db:
+        if(task["id"]==task_id):
+            return task
+        return None
+
 @app.post("/create-task")
 def create_task()
