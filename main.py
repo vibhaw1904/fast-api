@@ -1,12 +1,49 @@
 from typing import Union
-from fastapi import FastAPI
-from pydantic import BaseModel
+
+from fastapi import FastAPI, HTTPException, Query
+from pydantic import BaseModel, Field
+from typing import Optional, List
+from datetime import datetime
+from enum import Enum
 
 app=FastAPI(
      title="My First FastAPI App",
     description="Learning FastAPI step by step",
     version="1.0.0"
 );
+
+
+# Enum for task status
+class TaskStatus(str, Enum):
+    pending = "pending"
+    in_progress = "in_progress"
+    completed = "completed"
+
+# Pydantic models for request/response
+class TaskCreate(BaseModel):
+    title: str = Field(..., min_length=1, max_length=100, description="Task title")
+    description: Optional[str] = Field(None, max_length=500, description="Task description")
+    priority: int = Field(1, ge=1, le=5, description="Priority level (1-5)")
+    status: TaskStatus = Field(TaskStatus.pending, description="Task status")
+
+class TaskUpdate(BaseModel):
+    title: Optional[str] = Field(None, min_length=1, max_length=100)
+    description: Optional[str] = Field(None, max_length=500)
+    priority: Optional[int] = Field(None, ge=1, le=5)
+    status: Optional[TaskStatus] = None
+
+class TaskResponse(BaseModel):
+    id: int
+    title: str
+    description: Optional[str]
+    priority: int
+    status: TaskStatus
+    created_at: datetime
+    updated_at: datetime
+
+# In-memory storage (in real apps, you'd use a database)
+tasks_db = []
+next_id = 1
 
 
 class Item(BaseModel):
@@ -18,9 +55,9 @@ class Item(BaseModel):
 def read_root():
     return {"hello its vibhaw , my first api"}
 
-@app.get("/items/{item_id}")
-def read_item(item_id: int, q: Union[str, None] = None):
-    return {"item_id": item_id, "q": q}
+# @app.get("/items/{item_id}")
+# def read_item(item_id: int, q: Union[str, None] = None):
+#     return {"item_id": item_id, "q": q}
 
 
 
@@ -63,3 +100,7 @@ def read_user_ietm(user_id:int,item_id:int,q:Union[str,None]=None,short:bool=Fal
         "item_id": item_id,
         "description": f"Item {item_id} belongs to User {user_id}"
     }
+
+
+@app.post("/create-task")
+def create_task()
