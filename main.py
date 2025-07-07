@@ -110,5 +110,19 @@ def find_task(task_id:int):
             return task
         return None
 
-@app.post("/create-task")
-def create_task()
+@app.post("/create-task",response_model=TaskResponse, status_code=201)
+def create_task(task:TaskCreate):
+    global next_id
+    now= datetime.now()
+    new_task={
+        "id":next_id,
+        "title":task.title,
+        "description":task.description,
+        "priority":task.priority,
+        "status":task.status,
+        "created_at": now,
+        "updated_at": now
+    }
+    tasks_db.append(new_task)
+    next_id+=1
+    return new_task
