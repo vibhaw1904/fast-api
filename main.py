@@ -155,3 +155,13 @@ def update_task(task_id:int,task_update:TaskUpdate):
         task["updated_at"] = datetime.now()
     
     return task        
+
+@app.delete("/tasks/{task_id}",response_model=TaskResponse)
+def delete_task(task_id:int):
+    task=find_task(task_id)
+    if not task:
+        raise HTTPException(status_code=404, detail="Task not found")
+    
+    tasks_db.remove(task)
+    
+    return {"message": f"Task {task_id} deleted successfully"}
