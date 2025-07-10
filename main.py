@@ -126,3 +126,24 @@ def create_task(task:TaskCreate):
     tasks_db.append(new_task)
     next_id+=1
     return new_task
+
+@app.get("/tasks",response_model=List[TaskResponse])
+def get_tasks(status: Optional[TaskStatus] = Query(None, description="Filter by task status"),
+    priority: Optional[int] = Query(None, ge=1, le=5, description="Filter by priority level"),
+    skip: int = Query(0, ge=0, description="Number of tasks to skip"),
+    limit: int = Query(10, ge=1, le=100, description="Maximum number of tasks to return")):
+
+    filtered_tasks = tasks_db
+    if status:
+            filtered_tasks = [task for task in filtered_tasks if task["status"] == status]
+    
+    if priority:
+        filtered_tasks = [task for task in filtered_tasks if task["priority"] == priority]
+    
+    # Apply pagination
+    return filtered_tasks[skip:skip + limit]
+
+@app.put("/tasks/{task_id}",response_model=TaskResponse)
+def update_task(task_id:int,task_update:TaskUpdate):
+    
+        
