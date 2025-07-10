@@ -145,5 +145,13 @@ def get_tasks(status: Optional[TaskStatus] = Query(None, description="Filter by 
 
 @app.put("/tasks/{task_id}",response_model=TaskResponse)
 def update_task(task_id:int,task_update:TaskUpdate):
+    task=find_task(task_id)
+    if not task:
+        raise HTTPException(status_code=404,detail="task not found")
     
-        
+    update_data=task_update.dict(exlude_unset=True)
+    for field , value in update_data.items():
+        task[field]=value
+        task["updated_at"] = datetime.now()
+    
+    return task        
