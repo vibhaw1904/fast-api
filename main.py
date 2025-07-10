@@ -108,7 +108,7 @@ def find_task(task_id:int):
     for task in tasks_db:
         if(task["id"]==task_id):
             return task
-        return None
+    return None
 
 @app.post("/create-task",response_model=TaskResponse, status_code=201)
 def create_task(task:TaskCreate):
@@ -149,8 +149,8 @@ def update_task(task_id:int,task_update:TaskUpdate):
     if not task:
         raise HTTPException(status_code=404,detail="task not found")
     
-    update_data=task_update.dict(exlude_unset=True)
-    for field , value in update_data.items():
+    update_data=task_update.dict(exclude_unset=True)
+    for field,  value in update_data.items():
         task[field]=value
         task["updated_at"] = datetime.now()
     
