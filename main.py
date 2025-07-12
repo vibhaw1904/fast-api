@@ -165,3 +165,17 @@ def delete_task(task_id:int):
     tasks_db.remove(task)
     
     return {"message": f"Task {task_id} deleted successfully"}
+
+#get tasks summary
+
+@app.get("tasks/stats/summary")
+def get_task_stats():
+    status_counts={
+        "pending":0,
+        "in_progress":0,
+        "completed":0
+    }
+
+
+
+    
