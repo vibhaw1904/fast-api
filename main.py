@@ -190,5 +190,17 @@ def get_task_stats():
     }
 
 
+#mark task as completed 
+@app.patch("tasks/{task_id}/complete")
+def update_task_status(task_id:int):
+    task=find_task(task_id)
+    if not task:
+        raise HTTPException(status_code=404, detail="Task not found")
+    task["status"]=TaskStatus.completed
+    task["updated_at"]=datetime.now()
+
+    return {"message":f"Task {task_id} marked as completed","task":task}
+
+
 
     
