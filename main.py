@@ -170,10 +170,23 @@ def delete_task(task_id:int):
 
 @app.get("tasks/stats/summary")
 def get_task_stats():
+    total_tasks=len(tasks_db)
     status_counts={
         "pending":0,
         "in_progress":0,
         "completed":0
+    }
+
+    priority_counts={i:0 for i in range (1,6)}
+
+    for tasks in tasks_db:
+        status_counts[tasks["status"]]+=1
+        priority_counts[tasks["priority"]]+=1
+
+    return{
+        "total_tasks": total_tasks,
+        "by_status": status_counts,
+        "by_priority": priority_counts
     }
 
 
