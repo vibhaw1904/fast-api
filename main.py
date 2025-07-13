@@ -207,5 +207,13 @@ def get_tasks_by_priority(priority_level: int = Field(..., ge=1, le=5)):
     filtered_tasks = [task for task in tasks_db if task["priority"] == priority_level]
     return filtered_tasks
 
+#clear all completed tasks 
+@app.delete("/tasks/completed/clear")
+def clear_completed_tasks():
+    global tasks_db
+    completed_count = len([tasks for tasks in tasks_db if tasks["status"] == TaskStatus.completed])
+    tasks_db = [task for task in tasks_db if task["status"] != TaskStatus.completed]
+    
+    return {"message": f"Cleared {completed_count} completed tasks"}
 
     
