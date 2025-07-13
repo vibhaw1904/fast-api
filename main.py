@@ -202,5 +202,10 @@ def update_task_status(task_id:int):
     return {"message":f"Task {task_id} marked as completed","task":task}
 
 
+@app.get("/tasks/priority/{priority_level}",response_model=List[TaskResponse])
+def get_tasks_by_priority(priority_level: int = Field(..., ge=1, le=5)):
+    filtered_tasks = [task for task in tasks_db if task["priority"] == priority_level]
+    return filtered_tasks
+
 
     
